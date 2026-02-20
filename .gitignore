@@ -1,0 +1,11 @@
+# Executáveis
+*.exe
+*.out
+*.o
+
+# Pasta build
+build/
+
+# Arquivos temporários do Dev-C++
+*.layout
+*.dev
