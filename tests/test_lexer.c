@@ -55,8 +55,19 @@ void test_assign_token() {
 }
 
 /*
-    Função principal que executa todos os testes
+    Teste: reconhecer palavra reservada
 */
+void test_keyword_token() {
+    init_lexer("integer_type");
+
+    Token token = get_next_token();
+
+    int passed = (token.type == TOKEN_KEYWORD) &&
+                 (strcmp(token.lexeme, "integer_type") == 0);
+
+    print_result("test_keyword_token", passed);
+}
+
 int main() {
 
     printf("Running Lexer Tests\n");
@@ -65,6 +76,7 @@ int main() {
     test_number_token();
     test_identifier_token();
     test_assign_token();
+    test_keyword_token();
 
     printf("--------------------\n");
     printf("End of tests\n");

@@ -1,19 +1,20 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-// Enumeração que define todos os tipos de tokens possíveis
+// Enumeração dos tipos de tokens
 typedef enum {
     TOKEN_NUMBER,       // Número inteiro
     TOKEN_IDENTIFIER,   // Nome de variável ou função
+    TOKEN_KEYWORD,      // Palavra reservada da linguagem
     TOKEN_ASSIGN,       // Operador =
-    TOKEN_EOF           // Fim do arquivo
+    TOKEN_EOF           // Fim da entrada
 } TokenType;
 
 // Estrutura que representa um token
 typedef struct {
     TokenType type;     // Tipo do token
     char lexeme[64];    // Texto original do token
-    int line;           // Linha onde o token foi encontrado
+    int line;           // Linha atual (para futuras mensagens de erro)
 } Token;
 
 // Inicializa o lexer com o código fonte

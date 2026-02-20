@@ -1,24 +1,39 @@
-#include <ctype.h>   // Para isdigit e isalpha
-#include <string.h>  // Para strcpy
+#include <ctype.h>
+#include <string.h>
 #include "lexer.h"
 
-// Ponteiro para armazenar o código fonte
+// Armazena o código fonte
 static const char* input;
 
-// Posição atual no código
+// Posição atual
 static int position;
 
-// Linha atual (para debug futuro)
+// Linha atual
 static int current_line;
 
-// Inicializa o lexer
+/*
+    Verifica se uma string é palavra reservada
+*/
+int is_keyword(const char* str) {
+    return strcmp(str, "integer_type") == 0 ||
+           strcmp(str, "return_value") == 0 ||
+           strcmp(str, "while_loop") == 0 ||
+           strcmp(str, "in_condition") == 0 ||
+           strcmp(str, "otherwise_do") == 0;
+}
+
+/*
+    Inicializa o lexer
+*/
 void init_lexer(const char* source) {
     input = source;
     position = 0;
     current_line = 1;
 }
 
-// Função principal que retorna o próximo token
+/*
+    Retorna o próximo token
+*/
 Token get_next_token() {
 
     Token token;
@@ -28,11 +43,10 @@ Token get_next_token() {
         position++;
     }
 
-    // Verificar número
+    // Reconhecer número
     if (isdigit(input[position])) {
         int i = 0;
 
-        // Captura todos os dígitos consecutivos
         while (isdigit(input[position])) {
             token.lexeme[i++] = input[position++];
         }
@@ -44,22 +58,27 @@ Token get_next_token() {
         return token;
     }
 
-    // Verificar identificador (letras)
+    // Reconhecer identificador ou palavra reservada
     if (isalpha(input[position])) {
         int i = 0;
 
-        while (isalnum(input[position])) {
+        while (isalnum(input[position]) || input[position] == '_') {
             token.lexeme[i++] = input[position++];
         }
 
         token.lexeme[i] = '\0';
-        token.type = TOKEN_IDENTIFIER;
         token.line = current_line;
+
+        if (is_keyword(token.lexeme)) {
+            token.type = TOKEN_KEYWORD;
+        } else {
+            token.type = TOKEN_IDENTIFIER;
+        }
 
         return token;
     }
 
-    // Verificar operador =
+    // Reconhecer operador =
     if (input[position] == '=') {
         token.lexeme[0] = '=';
         token.lexeme[1] = '\0';
@@ -70,7 +89,7 @@ Token get_next_token() {
         return token;
     }
 
-    // Fim do código
+    // Fim da entrada
     token.type = TOKEN_EOF;
     strcpy(token.lexeme, "EOF");
     token.line = current_line;
